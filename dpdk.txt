@@ -1,0 +1,42 @@
+git clone --branch v25.07 --single-branch --depth 1 --no-tags https://github.com/DPDK/dpdk.git
+
+export CC=gcc-15
+export CXX=g++-15
+
+meson setup build \
+  --default-library=static \
+  -Dexamples= \
+  -Denable_drivers=bus/vdev,net/tap \
+  -Ddisable_drivers=crypto/*,event/*,raw/*,net/*,!net/tap \
+  -Dnuma=true \
+  -Dtests=false \
+  -Ddisable_libs=dlopen \
+  -Dc_args="-O3 -march=native -flto" \
+  -Dc_link_args="-Wl,--as-needed"
+
+meson setup build \
+  --default-library=static \
+  -Dexamples= \
+  -Denable_drivers=all \
+  -Ddisable_drivers=net/gve \
+  -Denable_libs=all \
+  -Dnuma=true \
+  -Dtests=false \
+  -Dc_args="-O3 -march=native -flto" \
+  -Dc_link_args="-Wl,--as-needed"
+
+
+
+ninja -C build
+
+
+meson setup build \
+  --default-library=static \
+  -Ddisable_drivers=all \
+  -Denable_drivers=bus/vdev,net/tun \
+  -Ddisable_libs=dlopen \
+  -Dnuma=true \
+  -Dtests=false \
+  -Dexamples= \
+  -Dc_args="-O3 -march=native -flto" \
+  -Dc_link_args="-Wl,--as-needed"

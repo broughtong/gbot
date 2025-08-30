@@ -1,0 +1,4 @@
+virtualnic true
+myip 192.168.10.2
+routerip 192.168.10.1
+subnet 24
